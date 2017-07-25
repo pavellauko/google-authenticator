@@ -2,28 +2,24 @@
 
 namespace Rixxi\GoogleAuthenticator;
 
-use Nette\Utils\Strings;
 use Base32\Base32;
-
+use Nette\Utils\Strings;
 
 /**
  * Basket for keeping seed binary value
  */
 class Seed
 {
-
-	static public function generate($length = 16)
+	public static function generate($length = 16)
 	{
 		return new static(Base32::decode(Strings::random($length, 'A-Z2-7')));
 	}
 
-
-	/** @var string */
+	/** @var string $value */
 	private $value;
 
-
 	/**
-	 * @param string
+	 * @param string $value
 	 * @throws \Exception
 	 */
 	public function __construct($value)
@@ -31,16 +27,13 @@ class Seed
 		$this->value = $value;
 	}
 
-
 	public function getValue()
 	{
 		return $this->value;
 	}
 
-
 	public function __toString()
 	{
 		return Base32::encode($this->value);
 	}
-
 }

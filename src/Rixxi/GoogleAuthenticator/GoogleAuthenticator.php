@@ -4,14 +4,11 @@ namespace Rixxi\GoogleAuthenticator;
 
 use Base32\Base32;
 
-
 class GoogleAuthenticator
 {
-
 	const
 		DIGITS = 6,
 		POW_10_DIGITS = 1000000;
-
 
 	/** @var Seed */
 	private $seed;
@@ -22,16 +19,15 @@ class GoogleAuthenticator
 	/** @var int */
 	private $period;
 
-
 	/**
-	 * @param Seed|string|null
-	 * @param ITimestampProvider|int|null
-	 * @param int
+	 * @param Seed|string|null $seed
+	 * @param ITimestampProvider|int|null $timestamp
+	 * @param int $period
 	 * @throws \Exception
 	 */
-	public function __construct($seed = NULL, $timestamp = NULL, $period = 30)
+	public function __construct($seed = null, $timestamp = null, $period = 30)
 	{
-		if ($seed === NULL) {
+		if ($seed === null) {
 			$this->seed = Seed::generate();
 
 		} elseif (is_string($seed) && ($decoded = Base32::decode($seed)) !== '') {
@@ -44,7 +40,7 @@ class GoogleAuthenticator
 			throw new \Exception('Seed must be valid base32 encoded string or instance of Seed.');
 		}
 
-		if ($timestamp === NULL) {
+		if ($timestamp === null) {
 			$this->timestampProvider = SystemTimestampProvider::getInstance();
 
 		} elseif (is_int($timestamp) || ctype_digit($timestamp)) {
@@ -78,8 +74,8 @@ class GoogleAuthenticator
 	/**
 	 * Verify authenticator code
 	 *
-	 * @param string
-	 * @param int
+	 * @param string $code
+	 * @param int $window
 	 * @return bool
 	 */
 	public function verify($code, $window = 0)
@@ -88,11 +84,11 @@ class GoogleAuthenticator
 		$max = $counter + $window * 2;
 		do {
 			if ($this->computeOneTimePassword($counter) === $code) {
-				return TRUE;
+				return true;
 			}
 		} while (++$counter <= $max);
 
-		return FALSE;
+		return false;
 	}
 
 
@@ -103,7 +99,7 @@ class GoogleAuthenticator
 	}
 
 	/**
-	 * @param int
+	 * @param int $window
 	 * @return string[]
 	 */
 	public function computeCodes($window)
@@ -120,7 +116,7 @@ class GoogleAuthenticator
 
 	private function computeOneTimePassword($counter)
 	{
-		$hash = hash_hmac('sha1', pack('NN', 0, $counter), $this->seed->getValue(), TRUE);
+		$hash = hash_hmac('sha1', pack('NN', 0, $counter), $this->seed->getValue(), true);
 		return str_pad(self::computeNumber($hash), self::DIGITS, '0', STR_PAD_LEFT);
 	}
 
@@ -131,14 +127,14 @@ class GoogleAuthenticator
 	}
 
 
-	static private function computeNumber($hash)
+	private static function computeNumber($hash)
 	{
 		$offset = ord($hash[19]) & 0xf;
 
 		return (
-			(ord($hash[$offset    ]) & 0x7f) << 24 |
+			(ord($hash[$offset]) & 0x7f) << 24 |
 			(ord($hash[$offset + 1]) & 0xff) << 16 |
-			(ord($hash[$offset + 2]) & 0xff) <<  8 |
+			(ord($hash[$offset + 2]) & 0xff) << 8 |
 			ord($hash[$offset + 3]) & 0xff
 		) % self::POW_10_DIGITS;
 	}

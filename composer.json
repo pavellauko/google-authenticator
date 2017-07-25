@@ -13,14 +13,20 @@
     },
     "require": {
         "christian-riesen/base32": "1.1",
-        "nette/nette": "2.0|2.1"
+        "nette/utils": "~2.4"
     },
     "require-dev": {
-        "nette/tester": "@dev"
+        "nette/tester": "@dev",
+         "vanio/coding-standards": "^0.1@dev"
     },
     "autoload": {
         "psr-0": {
             "Rixxi\\GoogleAuthenticator\\": "src/"
         }
+    },
+    "scripts": {
+        "lint": "\"vendor/bin/phpcs\" --standard=ruleset.xml --extensions=php --encoding=utf-8 --ignore=vendor src/.",
+        "fix": "\"vendor/bin/phpcbf\" --standard=ruleset.xml --extensions=php --encoding=utf-8 --no-patch --ignore=vendor src/.",
+        "test": "\"vendor/bin/tester\" -p php -c ./tests/php.ini-unix ./tests"
     }
 }

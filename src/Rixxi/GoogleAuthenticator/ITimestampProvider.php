@@ -2,7 +2,6 @@
 
 namespace Rixxi\GoogleAuthenticator;
 
-
 interface ITimestampProvider
 {
 

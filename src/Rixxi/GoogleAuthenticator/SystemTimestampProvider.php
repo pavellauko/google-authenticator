@@ -2,14 +2,13 @@
 
 namespace Rixxi\GoogleAuthenticator;
 
-
 class SystemTimestampProvider implements ITimestampProvider
 {
 
-	static public function getInstance()
+	public static function getInstance()
 	{
-		static $instance = NULL;
-		if ($instance === NULL) {
+		static $instance = null;
+		if ($instance === null) {
 			$instance = new static;
 		}
 		return $instance;
